@@ -1,5 +1,7 @@
 # dsh-tui
 
+**Languages:** English · [简体中文（中文文档）](README.zh.md)
+
 > ⚠️ **Independent third-party maintenance, not an official project.** This
 > package restores, migrates, and extends the interactive terminal front door
 > (`packages/ui/tui`) that DeepSeek removed from the public

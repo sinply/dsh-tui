@@ -1,5 +1,7 @@
 # dsh-tui
 
+**语言：** 简体中文 · [English](README.md)
+
 > ⚠️ **第三方独立维护，并非官方项目。** 本包从公开的
 > [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)
 > 提交历史中恢复了其在正式发布前移除的交互式终端前门
