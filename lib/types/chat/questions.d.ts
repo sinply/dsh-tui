@@ -3,7 +3,7 @@
  * user-interaction provider, presents one question overlay at a time in FIFO
  * order, and settles each request on answer, abort, overlay error, or channel
  * shutdown.
- * @module @deepseek-ai/dsh-tui/chat/questions
+ * @module dsh-tui/chat/questions
  */
 import type { ChatChannelDeps } from './channel.ts';
 /** Collaborators the question queue needs from the chat channel. */

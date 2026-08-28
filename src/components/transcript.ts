@@ -28,7 +28,8 @@ import type {
 import type { FileDiff } from '@deepseek-ai/dsh-tools'
 import { preview, renderUnknownXml } from './xml-tool-output.ts'
 import { displayInlineText, displayText } from './text.ts'
-import { brandText, gradientText, type Palette } from './theme.ts'
+import { brandText, type Palette } from './theme.ts'
+import { WHALE_ART_COMPACT } from './banner-whale.ts'
 import { contentText, type ParsedArguments } from './content.ts'
 import {
   formatCompletionTime,
@@ -123,11 +124,23 @@ function messageHeader(label: string, color: (text: string) => string, palette: 
   return palette.bold(palette.underline(color(`❯ ${displayText(label)}`)))
 }
 
+/** Brand name and one-line introduction for the banner's right column (the README's own words). */
+const STARTUP_TITLE = 'DeepSeek Harness'
+const STARTUP_DESCRIPTOR = 'open-source agent harness by DeepSeek AI'
+
+/** Claude-Code-style hints shown on a fresh start (when no welcome subtitle is set). */
+const STARTUP_TIPS = [
+  'Type /help for a list of commands',
+  'Ctrl+C to interrupt · Ctrl+D to exit',
+] as const
+
 /**
- * Borderless startup banner: a big block-letter DEEPSEEK logo (Claude-Code
- * style), the optional configured subtitle, and the session id. No box frame —
- * each line renders as plain left-padded text (matching transcript notices) so
- * it reads on any theme and drag-select copies without stray glyphs.
+ * Borderless startup banner: the compact official DeepSeek whale mark on the
+ * left (official `#4D6BFE` blue), with a DeepSeek Harness introduction and
+ * fresh-start hints beside it; a configured welcome or session title renders as
+ * a line below. No box frame — each line renders as plain left-padded text
+ * (matching transcript notices) so it reads on any theme and drag-select
+ * copies without stray glyphs.
  */
 export class HeaderComponent implements Component {
   /** Columns of the banner currently revealed; `undefined` renders it whole. */
@@ -137,7 +150,6 @@ export class HeaderComponent implements Component {
     private readonly agent: Agent,
     private readonly subtitle: () => string | undefined,
     private readonly palette: Palette,
-    private readonly gradient: boolean,
   ) {}
 
   /**
@@ -152,49 +164,42 @@ export class HeaderComponent implements Component {
 
   render(width: number): string[] {
     const usable = Math.max(1, width - 2)
-    // Art lines are fixed-width (55 + ` HARNESS` ≤ 64) and always render on
-    // one line. Truncate the PLAIN text before painting: every ANSI-aware
-    // width function counts escape sequences as visible characters, so a
-    // colored long line truncates to almost nothing. Wrap is skipped entirely
-    // for the same reason.
-    const art = DEEPSEEK_ART_5.flatMap((line, index) => {
-      const clipped = truncateToWidth(line, usable, '')
-      const painted = index === DEEPSEEK_ART_5.length - 1
-        ? `${clipped} ${this.gradient
-          ? gradientText('HARNESS')
-          : this.palette.bold(this.palette.code('HARNESS'))}`
-        : clipped
-      return [this.palette.bold(this.gradient ? gradientText(painted) : brandText(painted))]
-    })
-    const detail = displayText(this.agent.session.id)
+    // Side-by-side banner: the compact whale on the left, the introduction and
+    // hints on the right. Truncate the PLAIN text before painting: every
+    // ANSI-aware width function counts escape sequences as visible characters,
+    // so a colored long line truncates to almost nothing.
+    const art = WHALE_ART_COMPACT
+    const artWidth = Math.max(...art.map(row => row.length))
     const subtitle = this.subtitle()
-    const lines = [
-      ...art,
-      '',
-      ...subtitle === undefined ? [] : [this.palette.dim(displayText(subtitle))],
-      this.palette.dim(detail),
+    const rightText: Array<readonly [string, (text: string) => string]> = [
+      [STARTUP_TITLE, text => this.palette.bold(brandText(text))],
+      [STARTUP_DESCRIPTOR, text => this.palette.text(text)],
+      ...subtitle === undefined
+        ? STARTUP_TIPS.map(tip => [tip, (text: string) => this.palette.dim(text)] as const)
+        : [],
+      [displayText(this.agent.session.id), text => this.palette.dim(text)],
     ]
-      .flatMap((line, index) => index < art.length ? [line] : wrapTextWithAnsi(line, usable))
+    const textStart = Math.max(0, Math.floor((art.length - rightText.length) / 2))
+    const textColumn = Math.max(1, usable - artWidth - 2)
+    const header = art.flatMap((row, index) => {
+      const painted = this.palette.bold(brandText(truncateToWidth(row, usable, '')))
+      const entry = rightText[index - textStart]
+      if (entry === undefined) return [painted]
+      const [text, paint] = entry
+      const clipped = truncateToWidth(text, textColumn, '')
+      return clipped.length === 0 ? [painted] : [`${painted}  ${paint(clipped)}`]
+    })
+    const lines = [
+      ...header,
+      ...subtitle === undefined ? [] : ['', this.palette.dim(displayText(subtitle))],
+    ]
+      .flatMap((line, index) => index < header.length ? [line] : wrapTextWithAnsi(line, usable))
       .map(line => ` ${truncateToWidth(line, usable, '')}`)
-    // The reveal animation is row-based: it reveals one banner line at a time
-    // rather than clipping columns, so painted art rows are never re-truncated.
+    // The reveal animation is row-based: it reveals one banner line at a time.
     if (this.revealWidth === undefined) return lines
     return lines.slice(0, Math.min(this.revealWidth, lines.length))
   }
 }
-
-/**
- * Block-letter `D E E P S E E K` logo, five rows high (font "block"), each row
- * 55 columns wide. Painted row-by-row so the reveal animation and the brand
- * gradient sample across the whole word rather than per line.
- */
-const DEEPSEEK_ART_5 = [
-  ' ██████╗  ███████╗ ███████╗ ██████╗ ███████╗ ███████╗ ███████╗ ██╗  ██╗',
-  ' ██╔══██╗ ██╔════╝ ██╔════╝ ██╔══██╗██╔════╝ ██╔════╝ ██╔════╝ ██║ ██╔╝',
-  ' ██████╔╝ █████╗   █████╗   ██████╔╝███████╗ ███████╗ ███████╗ █████╔╝ ',
-  ' ██╔═══╝  ██╔══╝   ██╔══╝   ██╔═══╝ ╚════██║ ╚════██║ ╚════██║ ██╔═██╗ ',
-  ' ██║      ███████╗ ██║      ██║     ███████║ ███████║ ███████║ ██║  ██╗',
-] as const
 
 /**
  * A user or steering prompt in the transcript. An underlined accent role header

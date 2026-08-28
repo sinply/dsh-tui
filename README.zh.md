@@ -15,13 +15,16 @@
 发送消息、助手流式输出、推理块、工具卡片、注入上下文卡片、模型选择与会话
 恢复。
 
+![dsh-tui 启动横幅：DeepSeek Harness 鲸鱼与介绍、提示](assets/startup-banner.png)
+
 ## 功能
 
 - 基于持久化会话记录的全屏终端聊天
 - **You**（蓝）/ **❯ Assistant**（青绿）/ 注入的 **Context** 卡片 / 工具
   卡片之间有明确区分，并带全宽分隔线
-- Claude Code 风格的启动横幅：五行块状字母组成的 `DEEPSEEK` logo，以
-  DeepSeek 品牌色渐变绘制，逐行揭示
+- 官方 DeepSeek 小鲸鱼启动横幅：由官方 24×24 图标光栅化，以品牌蓝
+  `#4D6BFE` 绘制，逐行揭示，鲸鱼右侧带 DeepSeek Harness 介绍与起始提示
+  （全新启动时显示）
 - 默认 **VSCode Dark+ 风格 24-bit 配色**（蓝 `#569CD6`、青绿 `#4EC9B0`、
   冷灰 `#6E7681`、语义化的成功/警告/错误色），并保留自适应 ANSI 主题作为
   回退
@@ -109,7 +112,7 @@ npm install dsh-tui-0.1.0.tgz
     theme:
       color: true        # 总颜色开关；false = 纯文本
       vscode: true       # VSCode Dark+ 风格 24-bit 配色（默认）
-      truecolor: false   # 启动横幅品牌渐变（自动检测 COLORTERM）
+      truecolor: false   # 24-bit 输出；品牌绘制使用官方 DeepSeek 蓝（自动检测 COLORTERM）
       inputPrompt: '${symbol} ${indicator}'
 ```
 
@@ -120,6 +123,9 @@ pnpm install          # 安装依赖及类型检查所需的 peer 包
 pnpm run build        # tsc（lib/types）+ tsdown（lib/*.js）
 ```
 
+`pnpm-workspace.yaml` 将 `@deepseek-ai/dsh-*` peer 包固定到精确版本
+`0.1.1-rc.2`——npm 上只发布预发布版，裸 `>=0.0.1` 范围不匹配。
+
 ## 仓库结构
 
 ```
@@ -128,7 +134,32 @@ lib/                     构建产物（随包提供，可即取即用）
 cordis.patch.yml         dsh bundle patch（profile 层）
 legacy-launcher/         上游启动胶水（仅作参考，不参与构建）
 tests-pre-migration/     上游测试套件存档，尚未迁移（不参与构建）
+.agents/skills/           项目级技能（供在本仓库内工作的 dsh 会话使用）
 ```
+
+## 项目技能
+
+本仓库在 `dsh-tui/.agents/skills/` 下携带十个项目级技能，由
+deepseek-harness 仓库自身的技能集（master @ `cd5ef81481`，2026）针对本项目
+改造而来——仅限仓库本地，不打进 npm 包。cwd 位于本仓库内的 dsh 会话会自动
+发现它们（项目 `agents/skills` 根），任务匹配描述时按需加载；其他项目中
+不可见。
+
+| 技能 | 用途 |
+|---|---|
+| `dsh-doc` | README 双语对文档标准与逐行对齐 |
+| `dsh-prose-standard` | 契约保全的注释、文档、提示词与可见文案 |
+| `dsh-trim-cot-leakage` | 清除推理转写泄漏的文案 |
+| `dsh-code-review` | 对照本仓库实际约定的 PR 审查 |
+| `dsh-pre-push-checks` | 推送前最小本地校验（`pnpm typecheck`、`pnpm build`） |
+| `dsh-merging-stacked-prs` | GitHub 官方 PR stack 落地流程 |
+| `dsh-find-simplifications` | 证据导向的简化候选（issue/PR/TODO） |
+| `dsh-archive-agent-notes` | 预备——仅当本仓库引入 Agent Note 约定后适用 |
+| `dsh-translate-docs` | 扩展双语 README 工作流——仅手动调用（`/skill:dsh-translate-docs`） |
+| `record-browser-gif` | UI 演示 GIF：终端会话（主场景）与浏览器/Web UI |
+
+改造后的正文已清除所有 deepseek-harness 专属命令与相对链接；整套技能
+同置一处，技能间的交叉引用保持可解析。
 
 ## 相对官方移除时的迁移
 
@@ -146,7 +177,8 @@ tests-pre-migration/     上游测试套件存档，尚未迁移（不参与构�
   payload 风格的 agent 事件、经 `agent/pre-step` 自动解析 `@` 引用
 - `@earendil-works/pi-tui` 上游补丁对应的 `frame`/`prompt` 编辑器选项与
   `setPrompt`（已并入迁移后的 `HintEditor`）
-- 新的横幅艺术字、VSCode 风格主题、对话分隔线
+- 官方 DeepSeek 小鲸鱼启动横幅（由官方 24×24 图标光栅化）、VSCode 风格
+  主题、对话分隔线
 
 ## 许可证
 

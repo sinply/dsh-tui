@@ -1,7 +1,7 @@
 /**
  * Editor autocomplete provider merging path-only file candidates and optional
  * session-reference snapshots with the base slash-command completions.
- * @module @deepseek-ai/dsh-tui/chat/autocomplete
+ * @module dsh-tui/chat/autocomplete
  */
 import { CombinedAutocompleteProvider, type AutocompleteItem, type AutocompleteProvider, type AutocompleteSuggestions } from '@earendil-works/pi-tui';
 import type { Agent } from '@deepseek-ai/dsh-agent';

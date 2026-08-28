@@ -16,7 +16,7 @@ import {
 export interface TuiThemeConfig {
   /** Apply the built-in ANSI color palette. */
   color?: boolean
-  /** Paint the startup banner with the 24-bit DeepSeek brand gradient. */
+  /** Enable 24-bit truecolor output; brand art (the startup whale and marks) uses the official DeepSeek blue. */
   truecolor?: boolean
   /** Use the fixed 24-bit VSCode Dark+-inspired blue palette when color is on. */
   vscode?: boolean

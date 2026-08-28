@@ -2,14 +2,14 @@
  * Serializable configuration and defaults for the pi-tui terminal mode. Loader
  * schema validation normally fills defaults; {@link resolveTuiConfig} applies
  * the same defaults for direct callers that bypass the Loader.
- * @module @deepseek-ai/dsh-tui/config
+ * @module dsh-tui/config
  */
 import z from 'schemastery';
 /** Theme and prompt-template settings for the pi-tui terminal mode. */
 export interface TuiThemeConfig {
     /** Apply the built-in ANSI color palette. */
     color?: boolean;
-    /** Paint the startup banner with the 24-bit DeepSeek brand gradient. */
+    /** Enable 24-bit truecolor output; brand art (the startup whale and marks) uses the official DeepSeek blue. */
     truecolor?: boolean;
     /** Use the fixed 24-bit VSCode Dark+-inspired blue palette when color is on. */
     vscode?: boolean;

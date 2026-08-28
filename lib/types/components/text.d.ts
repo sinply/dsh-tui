@@ -2,7 +2,7 @@
  * Terminal text sanitization shared across the pi-tui front door. External text
  * (model output, tool results, clipboard) is escaped or stripped of C0/C1
  * controls before the TUI adds its own application-owned ANSI.
- * @module @deepseek-ai/dsh-tui/components/text
+ * @module dsh-tui/components/text
  */
 /** Bracketed-paste start marker emitted by terminals around pasted content. */
 export declare const BRACKETED_PASTE_START = "\u001B[200~";

@@ -2,7 +2,7 @@
  * pi-tui transcript components: the startup banner, user/assistant messages,
  * per-step timing footer, streaming assistant buffer, tool cards, and the todo
  * panel. Each is a pure function of its inputs and the active palette.
- * @module @deepseek-ai/dsh-tui/components/transcript
+ * @module dsh-tui/components/transcript
  */
 import { Container, type Component, type MarkdownTheme } from '@earendil-works/pi-tui';
 import type { Agent } from '@deepseek-ai/dsh-agent';
@@ -13,19 +13,20 @@ import { type Palette } from './theme.ts';
 import { type ParsedArguments } from './content.ts';
 import { type StepPosition, type StepTimingTracker } from '../chat/timing.ts';
 /**
- * Borderless startup banner: a big block-letter DEEPSEEK logo (Claude-Code
- * style), the optional configured subtitle, and the session id. No box frame —
- * each line renders as plain left-padded text (matching transcript notices) so
- * it reads on any theme and drag-select copies without stray glyphs.
+ * Borderless startup banner: the compact official DeepSeek whale mark on the
+ * left (official `#4D6BFE` blue), with a DeepSeek Harness introduction and
+ * fresh-start hints beside it; a configured welcome or session title renders as
+ * a line below. No box frame — each line renders as plain left-padded text
+ * (matching transcript notices) so it reads on any theme and drag-select
+ * copies without stray glyphs.
  */
 export declare class HeaderComponent implements Component {
     private readonly agent;
     private readonly subtitle;
     private readonly palette;
-    private readonly gradient;
     /** Columns of the banner currently revealed; `undefined` renders it whole. */
     private revealWidth;
-    constructor(agent: Agent, subtitle: () => string | undefined, palette: Palette, gradient: boolean);
+    constructor(agent: Agent, subtitle: () => string | undefined, palette: Palette);
     /**
      * Clip the banner to `width` columns (the sweep reveal); `undefined` restores it.
      * @param width - Revealed banner width in columns, or `undefined` for the whole banner.

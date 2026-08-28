@@ -1,7 +1,7 @@
 /**
  * Manual `/skill:<name> [instructions]` parsing and model-visible rendering for
  * the terminal front door.
- * @module @deepseek-ai/dsh-tui/chat/skill-invocation
+ * @module dsh-tui/chat/skill-invocation
  */
 import type { SkillDefinition } from '@deepseek-ai/dsh-skill';
 /** Prefix that marks an editor submission as a manual skill invocation. */

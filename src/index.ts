@@ -420,7 +420,6 @@ export function createTuiChat(
     agent,
     () => sessionTitle ?? config.welcome,
     palette,
-    resolved.theme.color && (resolved.theme.truecolor || resolved.theme.vscode),
   )
   const formattedCwd = displayText(runtime.formatCwd?.(agent.session.header.cwd) ?? formatCwd(agent.session.header.cwd))
   const branch = runtime.gitBranch?.(cwd) ?? gitBranch(cwd)

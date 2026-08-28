@@ -2,7 +2,7 @@
  * Conservative readable-tree rendering for model-facing text containing one XML
  * document, used by the transcript's tool cards for unknown tool results. Injected
  * context is prose and is not parsed; only {@link preview} is shared with its card.
- * @module @deepseek-ai/dsh-tui/components/xml-tool-output
+ * @module dsh-tui/components/xml-tool-output
  */
 /**
  * Collapse `lines` to a head/tail preview around one omitted-count marker.

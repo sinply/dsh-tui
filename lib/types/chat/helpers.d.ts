@@ -3,7 +3,7 @@
  * Git-branch formatting, transcript/tool-call derivations over the session log,
  * session-reference context cards, the placeholder editor, and banner-reveal
  * timing constants. None of these close over channel state.
- * @module @deepseek-ai/dsh-tui/chat/helpers
+ * @module dsh-tui/chat/helpers
  */
 import { Editor } from '@earendil-works/pi-tui';
 import type { Session, SessionEvent } from '@deepseek-ai/dsh-session';

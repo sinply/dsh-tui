@@ -17,13 +17,16 @@ agent, and provides keyboard-driven dialogs — sent messages, assistant stream,
 reasoning blocks, tool cards, injected-context cards, model selection, and
 session resume.
 
+![dsh-tui startup banner: DeepSeek Harness whale with introduction and hints](assets/startup-banner.png)
+
 ## Features
 
 - Full-screen terminal chat over a durable session transcript
 - Distinct visual separation between **You** (blue), **❯ Assistant** (teal),
   injected **Context** cards, and tool cards, with full-width separators
-- Claude-Code-style startup banner: a five-row block-letter `DEEPSEEK` logo
-  painted in the DeepSeek brand gradient, revealed row by row
+- Official DeepSeek whale startup banner: the 24×24 official icon rasterized
+  and painted in the brand's `#4D6BFE` blue, revealed row by row, with a
+  DeepSeek Harness introduction and fresh-start hints beside the mark
 - Default **VSCode Dark+–inspired 24-bit palette** (blue `#569CD6`, teal
   `#4EC9B0`, cold-gray dim `#6E7681`, semantic success/warning/error), with a
   fallback to the adaptive ANSI theme
@@ -113,7 +116,7 @@ Then reference it in a dsh profile patch:
     theme:
       color: true        # master color switch; false = plain text
       vscode: true       # VSCode Dark+–inspired 24-bit palette (default)
-      truecolor: false   # banner brand gradient (auto-detects COLORTERM)
+      truecolor: false   # 24-bit output; brand art uses official DeepSeek blue (auto-detects COLORTERM)
       inputPrompt: '${symbol} ${indicator}'
 ```
 
@@ -124,6 +127,10 @@ pnpm install          # installs deps and the peer packages for typecheck
 pnpm run build        # tsc (lib/types) + tsdown (lib/*.js)
 ```
 
+The `pnpm-workspace.yaml` pins the `@deepseek-ai/dsh-*` peer packages to the
+exact `0.1.1-rc.2` versions — the registry only publishes prereleases, which a
+bare `>=0.0.1` range cannot match.
+
 ## Repository layout
 
 ```
@@ -132,7 +139,34 @@ lib/                     built bundles (included for drop-in use)
 cordis.patch.yml         dsh bundle patch (profile layer)
 legacy-launcher/         the upstream launcher glue (reference only, not built)
 tests-pre-migration/     upstream test suite archive, not yet migrated (not built)
+.agents/skills/           project-scoped skills for dsh sessions working in this repo
 ```
+
+## Project skills
+
+This repository carries ten project-scoped skills under
+`dsh-tui/.agents/skills/`, adapted from the deepseek-harness repository's own
+skill set (master @ `cd5ef81481`, 2026) for this project — repo-local, not
+shipped in the npm package. A dsh session whose working directory is inside
+this repository auto-discovers them (project `agents/skills` root) and loads
+one when the task matches its description; they stay invisible in other
+projects.
+
+| Skill | Purpose |
+|---|---|
+| `dsh-doc` | README-pair documentation standard and bilingual-line alignment |
+| `dsh-prose-standard` | contract-preserving comments, docs, prompts, and copy |
+| `dsh-trim-cot-leakage` | remove leaked chain-of-thought prose |
+| `dsh-code-review` | PR review against this repo's actual conventions |
+| `dsh-pre-push-checks` | smallest local checks before pushing (`pnpm typecheck`, `pnpm build`) |
+| `dsh-merging-stacked-prs` | GitHub official stacked-PR landing flow |
+| `dsh-find-simplifications` | evidence-backed simplification candidates (issue/PR/TODO) |
+| `dsh-archive-agent-notes` | standby — applies only once this repo adopts an Agent Note convention |
+| `dsh-translate-docs` | extended bilingual README workflow — user-invoked only (`/skill:dsh-translate-docs`) |
+| `record-browser-gif` | UI demo GIFs: terminal sessions (primary) and browser/Web UI |
+
+The adapted bodies drop every deepseek-harness-specific command and relative
+link; the set ships together so in-skill cross-references keep resolving.
 
 ## Migrations vs. the official removal
 
@@ -151,7 +185,8 @@ this repository migrates it, including:
   resolution via `agent/pre-step`
 - `@earendil-works/pi-tui` upstream patch surfaced as the `frame`/`prompt`
   editor options and `setPrompt` (restored in the migrated `HintEditor`)
-- new banner art, VSCode-inspired theme, transcript separators
+- official DeepSeek whale startup banner (rasterized from the official 24×24
+  icon), VSCode-inspired theme, transcript separators
 
 ## License
 

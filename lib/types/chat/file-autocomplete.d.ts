@@ -3,7 +3,7 @@
  * paths only: selected values remain ordinary prompt text and file contents
  * stay behind the model-facing `read` tool.
  *
- * @module @deepseek-ai/dsh-tui/chat/file-autocomplete
+ * @module dsh-tui/chat/file-autocomplete
  */
 /** Default maximum file and directory candidates rendered for one query. */
 export declare const DEFAULT_FILE_SEARCH_MAX_RESULTS = 20;
