@@ -1,0 +1,54 @@
+# dsh bundle patch — the interactive TUI front door as a profile layer.
+#
+# Bases on the shared `@deepseek-ai/dsh-base` bundle and adds the TUI surface:
+# one `main` agent driven by the terminal, the deepseek adapter, and the
+# `ui-tui` row. Rows whose ids no longer exist in the current base are skipped
+# with a Loader warning by design (patches never fail a boot over a missing row).
+
+# `main` is the agent the TUI drives; `sessionId` fixes its live identity so
+# the `ui-tui` row can match it; `provider`/`model` name the route a personal
+# overlay or `dsh login` repoints; `cwd` anchors the session to the invoking
+# directory.
+- id: agent-loop
+  config:
+    agents:
+      - id: main
+        sessionId: main
+        provider: deepseek-official
+        model: deepseek-v4-pro
+        cwd: !!js process.cwd()
+
+# Keep the persona to identity and behavior; tool plugins own tool guidance.
+- id: system-prompt
+  config:
+    persona: |
+      You are a coding agent powered by the {{model}} model.
+
+      Verify your work by running the code or tests. Keep answers brief and
+      factual.
+
+# Shipped default: full thinking at max effort on every request.
+- id: llm-deepseek
+  config:
+    apiKey: !!js process.env.DEEPSEEK_API_KEY
+    baseURL: !!js process.env.DEEPSEEK_BASE_URL
+    thinking: enabled
+    reasoningEffort: max
+
+# This single-session app resolves relative paths from the process cwd.
+- id: fs-sandbox
+  config:
+    cwd: !!js process.cwd()
+
+# The TUI presents the native tool registry.
+- id: tools
+  config:
+    mode: native
+
+# The TUI rows: the prompt-value service it injects, then the front door itself.
+- insert:
+    - id: tui-prompt
+      name: 'dsh-tui/prompt'
+
+    - id: ui-tui
+      name: 'dsh-tui'
