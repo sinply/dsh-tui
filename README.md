@@ -48,7 +48,7 @@ The package ships a built `lib/` and a `cordis.patch.yml` bundle overlay.
 # from this repository
 pnpm pack --pack-destination /tmp
 # create a profile, install the tarball as a plugin
-dsh plugin --profile tui add /tmp/dsh-tui-0.1.0.tgz
+dsh plugin --profile tui add /tmp/dsh-tui-0.1.4.tgz
 # boot into the interactive TUI
 dsh --profile tui
 ```
@@ -64,7 +64,7 @@ by design.
 ```bash
 npm install dsh-tui
 # or from a tarball
-npm install dsh-tui-0.1.0.tgz
+npm install dsh-tui-0.1.4.tgz
 ```
 
 Then reference it in a dsh profile patch:

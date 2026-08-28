@@ -44,7 +44,7 @@
 # 在本仓库内打包
 pnpm pack --pack-destination /tmp
 # 创建 profile 并以插件方式安装 tarball
-dsh plugin --profile tui add /tmp/dsh-tui-0.1.0.tgz
+dsh plugin --profile tui add /tmp/dsh-tui-0.1.4.tgz
 # 进入交互式 TUI
 dsh --profile tui
 ```
@@ -59,7 +59,7 @@ base 中不再存在对应行 id，Loader 会按设计给出跳过警告。
 ```bash
 npm install dsh-tui
 # 或从 tarball 安装
-npm install dsh-tui-0.1.0.tgz
+npm install dsh-tui-0.1.4.tgz
 ```
 
 随后在 dsh profile patch 中引用：
