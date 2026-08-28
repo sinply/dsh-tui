@@ -128,7 +128,7 @@ function messageHeader(label: string, color: (text: string) => string, palette: 
 const STARTUP_TITLE = 'DeepSeek Harness'
 const STARTUP_DESCRIPTOR = 'open-source agent harness by DeepSeek AI'
 
-/** Claude-Code-style hints shown on a fresh start (when no welcome subtitle is set). */
+/** Claude-Code-style hints shown beside the mark on every start. */
 const STARTUP_TIPS = [
   'Type /help for a list of commands',
   'Ctrl+C to interrupt · Ctrl+D to exit',
@@ -174,9 +174,7 @@ export class HeaderComponent implements Component {
     const rightText: Array<readonly [string, (text: string) => string]> = [
       [STARTUP_TITLE, text => this.palette.bold(brandText(text))],
       [STARTUP_DESCRIPTOR, text => this.palette.text(text)],
-      ...subtitle === undefined
-        ? STARTUP_TIPS.map(tip => [tip, (text: string) => this.palette.dim(text)] as const)
-        : [],
+      ...STARTUP_TIPS.map(tip => [tip, (text: string) => this.palette.dim(text)] as const),
       [displayText(this.agent.session.id), text => this.palette.dim(text)],
     ]
     const textStart = Math.max(0, Math.floor((art.length - rightText.length) / 2))

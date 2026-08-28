@@ -26,7 +26,7 @@ session resume.
   injected **Context** cards, and tool cards, with full-width separators
 - Official DeepSeek whale startup banner: the 24×24 official icon rasterized
   and painted in the brand's `#4D6BFE` blue, revealed row by row, with a
-  DeepSeek Harness introduction and fresh-start hints beside the mark
+  DeepSeek Harness introduction and starter hints beside the mark
 - Default **VSCode Dark+–inspired 24-bit palette** (blue `#569CD6`, teal
   `#4EC9B0`, cold-gray dim `#6E7681`, semantic success/warning/error), with a
   fallback to the adaptive ANSI theme
