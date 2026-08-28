@@ -43,3 +43,14 @@ export const WHALE_ART_COMPACT = Object.freeze([
   '   ▀███▄▄▄███▄  ████▄▄',
   '     ▀▀▀███████▀▀',
 ] as const)
+
+/** The same official mark, `minimal` tier: fewest rows, for compact side-by-side banners. */
+export const WHALE_ART_MINIMAL = Object.freeze([
+  '   ▄▄▄▄▄▄   ▄▄',
+  ' ▄████████▄ ▀████▀',
+  '█▀▀▀▀███████▄██▀',
+  '█▄    ▀███ ▀███',
+  '▀█▄     ▀█████',
+  ' ▀█▄▄ █▄▄▀███▄',
+  '    ▀▀▀▀▀▀',
+] as const)

@@ -29,7 +29,7 @@ import type { FileDiff } from '@deepseek-ai/dsh-tools'
 import { preview, renderUnknownXml } from './xml-tool-output.ts'
 import { displayInlineText, displayText } from './text.ts'
 import { brandText, type Palette } from './theme.ts'
-import { WHALE_ART_COMPACT } from './banner-whale.ts'
+import { WHALE_ART_MINIMAL } from './banner-whale.ts'
 import { contentText, type ParsedArguments } from './content.ts'
 import {
   formatCompletionTime,
@@ -168,7 +168,7 @@ export class HeaderComponent implements Component {
     // hints on the right. Truncate the PLAIN text before painting: every
     // ANSI-aware width function counts escape sequences as visible characters,
     // so a colored long line truncates to almost nothing.
-    const art = WHALE_ART_COMPACT
+    const art = WHALE_ART_MINIMAL
     const artWidth = Math.max(...art.map(row => row.length))
     const subtitle = this.subtitle()
     const rightText: Array<readonly [string, (text: string) => string]> = [
@@ -179,13 +179,16 @@ export class HeaderComponent implements Component {
     ]
     const textStart = Math.max(0, Math.floor((art.length - rightText.length) / 2))
     const textColumn = Math.max(1, usable - artWidth - 2)
+    const padTo = Math.min(artWidth, usable)
     const header = art.flatMap((row, index) => {
-      const painted = this.palette.bold(brandText(truncateToWidth(row, usable, '')))
+      // Pad every whale row to one uniform width so the right column starts at
+      // the same column on every line (the whale gains the space, not the text).
+      const whale = this.palette.bold(brandText(truncateToWidth(row, usable, '').padEnd(padTo)))
       const entry = rightText[index - textStart]
-      if (entry === undefined) return [painted]
+      if (entry === undefined) return [whale]
       const [text, paint] = entry
       const clipped = truncateToWidth(text, textColumn, '')
-      return clipped.length === 0 ? [painted] : [`${painted}  ${paint(clipped)}`]
+      return clipped.length === 0 ? [whale] : [`${whale}  ${paint(clipped)}`]
     })
     const lines = [
       ...header,
