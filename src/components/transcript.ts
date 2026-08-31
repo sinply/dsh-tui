@@ -18,7 +18,9 @@ import {
 import { diffLines as compareLines } from 'diff'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { ContentBlock, StreamChunk } from '@deepseek-ai/dsh-llm'
-import type { JsonValue, SessionEvent, TodoItem } from '@deepseek-ai/dsh-session'
+import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { TodoItem } from '@deepseek-ai/dsh-tool-todo'
 import type {
   TerminalCallView,
   ToolCallView,

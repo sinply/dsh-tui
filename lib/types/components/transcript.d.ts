@@ -7,7 +7,8 @@
 import { Container, type Component, type MarkdownTheme } from '@earendil-works/pi-tui';
 import type { Agent } from '@deepseek-ai/dsh-agent';
 import type { ContentBlock, StreamChunk } from '@deepseek-ai/dsh-llm';
-import type { SessionEvent, TodoItem } from '@deepseek-ai/dsh-session';
+import type { SessionEvent } from '@deepseek-ai/dsh-session';
+import type { TodoItem } from '@deepseek-ai/dsh-tool-todo';
 import type { ToolDefinition } from '@deepseek-ai/dsh-tools';
 import { type Palette } from './theme.ts';
 import { type ParsedArguments } from './content.ts';

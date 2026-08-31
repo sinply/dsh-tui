@@ -118,21 +118,20 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
   }
 
   /**
-   * One persisted row's title through the projection-cache ladder: the
-   * zero-I/O checkpoint row when usable, otherwise a cold read that folds
-   * only the log tail since the checkpoint and writes the refreshed row
-   * back — so a store scanned once serves later scans without log reads.
+   * One persisted row's title through the projection-cache fast path: the
+   * zero-I/O cached row when usable. Rows the cache does not yet serve are
+   * resolved in one bounded batch over the query engine once the workers
+   * finish (see {@link resolveTitles}); dsh 0.1.2-alpha.2's
+   * `coldSnapshot(meta, events)` expects the caller to own the full log, so a
+   * per-row cold fold is no longer the TUI's job here.
    */
   const projectedTitle = async (
     cache: SessionProjectionCache,
     record: SessionRecord,
-    signal: AbortSignal,
   ): Promise<string | null | undefined> => {
     const live = ctx.sessions.get(record.header.id)
     if (live !== undefined) return ctx.get('sessionProjections')?.snapshot(live).values.title
-    const cached = cache.cachedSnapshot(record.header)
-    if (cached !== undefined && 'title' in cached.values) return cached.values.title
-    return (await cache.coldSnapshot(record.header.id, signal)).values.title
+    return cache.cachedSnapshot(record.header)?.values.title
   }
 
   /** One per-record title resolution: a title (absent for untitled) or an isolated failure. */
@@ -162,6 +161,7 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
       })
     }
     const resolutions = new Array<TitleResolution>(records.length)
+    const missing: Array<{ index: number; id: SessionId }> = []
     let cursor = 0
     const worker = async (): Promise<void> => {
       for (;;) {
@@ -170,7 +170,11 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
         cursor += 1
         const record = records[index] as SessionRecord
         try {
-          const value = await projectedTitle(cache, record, signal)
+          const value = await projectedTitle(cache, record)
+          if (value === undefined && ctx.sessions.get(record.header.id) === undefined) {
+            missing.push({ index, id: record.header.id })
+            continue
+          }
           resolutions[index] = typeof value === 'string' ? { title: value } : {}
         } catch (failure: unknown) {
           resolutions[index] = { failure }
@@ -181,6 +185,21 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
       { length: Math.min(resolved.resumeScanConcurrency, records.length) },
       () => worker(),
     ))
+    if (missing.length > 0) {
+      const results = await listQuery.readTitleSnapshots(missing.map(entry => entry.id), signal)
+      for (let resultIndex = 0; resultIndex < missing.length; resultIndex++) {
+        const entry = missing[resultIndex] as { index: number; id: SessionId }
+        const result = results[resultIndex]
+        /* v8 ignore next 2 -- readTitleSnapshots returns one result per unique listed id in input order */
+        if (result === undefined || result.sessionId !== entry.id) throw new Error(`resume scan misaligned at "${entry.id}"`)
+        if (result.status === 'rejected') {
+          resolutions[entry.index] = { failure: result.reason }
+        } else {
+          const title = result.value.title?.title
+          resolutions[entry.index] = title === undefined ? {} : { title }
+        }
+      }
+    }
     return resolutions
   }
 
