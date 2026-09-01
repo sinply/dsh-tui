@@ -1,4 +1,4 @@
-# dsh-tui
+﻿# dsh-tui
 
 **语言：** 简体中文 · [English](README.md)
 
@@ -115,7 +115,7 @@ pnpm install          # installs deps and the peer packages for typecheck
 pnpm run build        # tsc (lib/types) + tsdown (lib/*.js)
 ```
 
-`pnpm-workspace.yaml` 将 `@deepseek-ai/dsh-*` peer 包固定到精确版本 `0.1.2-alpha.2`——npm 上只发布预发布版，裸 `>=0.0.1` 范围不匹配。
+`pnpm-workspace.yaml` 将 `@deepseek-ai/dsh-*` peer 包固定到精确版本 `0.1.2-alpha.3`——npm 上只发布预发布版，裸 `>=0.0.1` 范围不匹配。
 
 ## 仓库结构
 
@@ -160,7 +160,7 @@ cwd 位于本仓库内的 dsh 会话会自动发现它们（项目 `agents/skill
 - 会话事件演进：`turn/end` 结束原因形态、`compact/*` → `compaction/*`、payload 风格的 agent 事件、经 `agent/pre-step` 自动解析 `@` 引用
 - `@earendil-works/pi-tui` 上游补丁对应的 `frame`/`prompt` 编辑器选项与 `setPrompt`（已并入迁移后的 `HintEditor`）
 - 官方 DeepSeek 小鲸鱼启动横幅（由官方 24×24 图标光栅化）、VSCode 风格主题、对话分隔线
-- dsh API 基线升至 0.1.2-alpha.2：user-questions 应答者挂到 `user-questions/request` waterfall、标题冷读移交会话查询引擎、todo 类型来自 `dsh-tool-todo`/`dsh-util-values`
+- dsh API 基线升至 0.1.2-alpha.3：user-questions 应答者挂到 `user-questions/request` waterfall、标题冷读移交会话查询引擎、todo 类型来自 `dsh-tool-todo`/`dsh-util-values`
 
 ## 许可证
 
