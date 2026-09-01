@@ -1,4 +1,4 @@
-﻿# dsh-tui
+# dsh-tui
 
 **Languages:** English · [简体中文（中文文档）](README.zh.md)
 
@@ -148,6 +148,7 @@ A dsh session whose working directory is inside this repository auto-discovers t
 | `dsh-archive-agent-notes` | standby — applies only once this repo adopts an Agent Note convention |
 | `dsh-translate-docs` | extended bilingual README workflow — user-invoked only (`/skill:dsh-translate-docs`) |
 | `record-browser-gif` | UI demo GIFs: terminal sessions (primary) and browser/Web UI |
+| `dsh-release` | release-cycle runbook: baseline bump, API migration, pack, install, tag, GitHub release |
 
 The adapted bodies drop every deepseek-harness-specific command and relative link; the set ships together so in-skill cross-references keep resolving.
 

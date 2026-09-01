@@ -1,4 +1,4 @@
-﻿# dsh-tui
+# dsh-tui
 
 **语言：** 简体中文 · [English](README.md)
 
@@ -148,6 +148,7 @@ cwd 位于本仓库内的 dsh 会话会自动发现它们（项目 `agents/skill
 | `dsh-archive-agent-notes` | 预备——仅当本仓库引入 Agent Note 约定后适用 |
 | `dsh-translate-docs` | 扩展双语 README 工作流——仅手动调用（`/skill:dsh-translate-docs`） |
 | `record-browser-gif` | UI 演示 GIF：终端会话（主场景）与浏览器/Web UI |
+| `dsh-release` | 发布周期流程：基线升级、API 迁移、打包、安装、打 tag、发布 GitHub Release |
 
 改造后的正文已清除所有 deepseek-harness 专属命令与相对链接；整套技能同置一处，技能间的交叉引用保持可解析。
 
