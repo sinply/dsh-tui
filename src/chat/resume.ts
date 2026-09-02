@@ -12,7 +12,6 @@ import { errorChain } from '@deepseek-ai/dsh-llm'
 import type { SessionEvent, SessionId } from '@deepseek-ai/dsh-session'
 import type {} from '@deepseek-ai/dsh-session-persistence'
 import type {} from '@deepseek-ai/dsh-session-projection'
-import type { SessionProjectionCache } from '@deepseek-ai/dsh-session-projection-cache'
 import type {} from '@deepseek-ai/dsh-session-title'
 import type {
   SessionQueryEngine,
@@ -106,7 +105,7 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
    */
   const lastActivityAt = async (record: SessionRecord): Promise<number | undefined> => {
     const live = ctx.sessions.get(record.header.id)
-    if (live !== undefined) return live.events.at(-1)?.time
+    if (live !== undefined) return live.snapshotEvents().at(-1)?.time
     const location = ctx.get('sessionPersistence')?.locate(record.header)
     if (location === undefined) return undefined
     try {
@@ -118,48 +117,33 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
   }
 
   /**
-   * One persisted row's title through the projection-cache fast path: the
-   * zero-I/O cached row when usable. Rows the cache does not yet serve are
-   * resolved in one bounded batch over the query engine once the workers
-   * finish (see {@link resolveTitles}); dsh 0.1.2-alpha.2's
-   * `coldSnapshot(meta, events)` expects the caller to own the full log, so a
-   * per-row cold fold is no longer the TUI's job here.
-   */
-  const projectedTitle = async (
-    cache: SessionProjectionCache,
+ * One listed row's title: live sessions answer from the projections snapshot.
+ * Persisted rows defer to the query-engine batch (alpha.4's projection-cache
+ * identity needs the durable fork-lineage cut, which a listed record does not
+ * carry, and `coldSnapshot(meta, events)` expects the caller to own the full
+ * log) — see {@link resolveTitles}.
+ */
+const projectedTitle = async (
     record: SessionRecord,
   ): Promise<string | null | undefined> => {
     const live = ctx.sessions.get(record.header.id)
     if (live !== undefined) return ctx.get('sessionProjections')?.snapshot(live).values.title
-    return cache.cachedSnapshot(record.header)?.values.title
+    return undefined
   }
 
   /** One per-record title resolution: a title (absent for untitled) or an isolated failure. */
   type TitleResolution = { title?: string; failure?: unknown }
 
   /**
-   * Resolve every row's title without reading whole logs when the projection
-   * cache is mounted (live registry snapshot / checkpoint row / tail-only
-   * cold read, bounded by `resumeScanConcurrency`); a composition without
-   * the cache falls back to one bounded raw-log title batch.
+   * Resolve every row's title: live sessions from the projections snapshot,
+   * persisted rows from one bounded query-engine batch (bounded by
+   * `resumeScanConcurrency` for the live probes; the batch reads logs itself).
    */
   const resolveTitles = async (
     listQuery: SessionQueryEngine,
     records: readonly SessionRecord[],
     signal: AbortSignal,
   ): Promise<TitleResolution[]> => {
-    const cache = ctx.get('sessionProjectionCache')
-    if (cache === undefined) {
-      const results = await listQuery.readTitleSnapshots(records.map(record => record.header.id), signal)
-      return records.map((record, index): TitleResolution => {
-        const result = results[index]
-        /* v8 ignore next 2 -- readTitleSnapshots returns one result per unique listed id in input order */
-        if (result === undefined || result.sessionId !== record.header.id) throw new Error(`resume scan misaligned at "${record.header.id}"`)
-        if (result.status === 'rejected') return { failure: result.reason }
-        const title = result.value.title?.title
-        return title === undefined ? {} : { title }
-      })
-    }
     const resolutions = new Array<TitleResolution>(records.length)
     const missing: Array<{ index: number; id: SessionId }> = []
     let cursor = 0
@@ -170,7 +154,7 @@ export function createResumeController(deps: ResumeControllerDeps): ResumeContro
         cursor += 1
         const record = records[index] as SessionRecord
         try {
-          const value = await projectedTitle(cache, record)
+          const value = await projectedTitle(record)
           if (value === undefined && ctx.sessions.get(record.header.id) === undefined) {
             missing.push({ index, id: record.header.id })
             continue

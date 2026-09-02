@@ -16,7 +16,7 @@ import {
   visibleWidth,
 } from '@earendil-works/pi-tui'
 import { isCompactCheckpointSource } from '@deepseek-ai/dsh-compaction'
-import { isAppendSurfaceEvent, isReplacementSurfaceEvent } from '@deepseek-ai/dsh-session'
+import { deriveEventMessage, isAppendSurfaceEvent, isReplacementSurfaceEvent } from '@deepseek-ai/dsh-session'
 import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
 import { scrubbedParentEnv } from '@deepseek-ai/dsh-subprocess'
 
@@ -99,9 +99,11 @@ export function gitBranch(cwd: string): string | undefined {
  */
 export function transcriptToolCallIds(session: Session): Set<string> {
   const ids = new Set<string>()
-  for (const event of session.events) {
+  for (const event of session.snapshotEvents()) {
     if (event.type !== 'assistant/message' || !isAppendSurfaceEvent(event)) continue
-    for (const block of event.data.message.content) {
+    const content = deriveEventMessage(event)?.content
+    if (content === undefined) continue
+    for (const block of content) {
       if (block.type === 'tool-call') ids.add(block.id)
     }
   }

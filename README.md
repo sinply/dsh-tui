@@ -115,7 +115,7 @@ pnpm install          # installs deps and the peer packages for typecheck
 pnpm run build        # tsc (lib/types) + tsdown (lib/*.js)
 ```
 
-The `pnpm-workspace.yaml` pins the `@deepseek-ai/dsh-*` peer packages to the exact `0.1.2-alpha.3` versions — the registry only publishes prereleases, which a bare `>=0.0.1` range cannot match.
+The `pnpm-workspace.yaml` pins the `@deepseek-ai/dsh-*` peer packages to the exact `0.1.2-alpha.4` versions — the registry only publishes prereleases, which a bare `>=0.0.1` range cannot match.
 
 ## Repository layout
 
@@ -161,8 +161,9 @@ The upstream `packages/ui/tui` predates several DeepSeek Harness API changes; th
 - session event drift: `turn/end` reason shapes, `compact/*` → `compaction/*`, payload-style agent events, automatic `@` reference resolution via `agent/pre-step`
 - `@earendil-works/pi-tui` upstream patch surfaced as the `frame`/`prompt` editor options and `setPrompt` (restored in the migrated `HintEditor`)
 - official DeepSeek whale startup banner (rasterized from the official 24×24 icon), VSCode-inspired theme, transcript separators
-- dsh baseline lifted to 0.1.2-alpha.3: user-questions answerers compose on the `user-questions/request` waterfall, title cold reads move to the session query engine, and todo types come from `dsh-tool-todo`/`dsh-util-values`
+- dsh baseline lifted through 0.1.2-alpha.4: user-questions answerers compose on the `user-questions/request` waterfall, session reads use `snapshotEvents()`/`deriveEventMessage`, title cold reads stay in the query engine, and todo types come from `dsh-tool-todo`/`dsh-util-values`
 
 ## License
 
 BSD-3-Clause — see [LICENSE](LICENSE). The original source is derived from the public DeepSeek Harness commit history; this repository is an independent re-packaging and carries no official status.
+

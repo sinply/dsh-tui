@@ -77,7 +77,7 @@ export function cacheHitRate(totals: SessionTokenTotals): number | undefined {
  */
 export function sessionTokens(session: Session): SessionTokenTotals {
   const totals: SessionTokenTotals = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, byStep: new Map() }
-  for (const event of session.events) {
+  for (const event of session.snapshotEvents()) {
     recordEventUsage(totals, event)
   }
   return totals

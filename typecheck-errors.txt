@@ -1,0 +1,19 @@
+﻿src/chat/helpers.ts(102,31): error TS2339: Property 'events' does not exist on type 'Session'.
+src/chat/helpers.ts(104,36): error TS2339: Property 'message' does not exist on type '{ turn: number; step: number; message: AssistantMessage; usage?: TokenUsage; interrupted?: true; } | UserMessage | { turn: number; step: number; message: ToolResultMessage; error?: { ...; }; meta?: JsonValue; }'.
+  Property 'message' does not exist on type 'UserMessage'.
+src/chat/resume.ts(109,41): error TS2339: Property 'events' does not exist on type 'Session'.
+src/chat/resume.ts(134,18): error TS2554: Expected 2-3 arguments, but got 1.
+src/chat/tokens.ts(80,31): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(418,53): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(466,21): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(668,56): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(674,69): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(783,27): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(985,39): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(1227,34): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(1237,33): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/index.ts(1238,33): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/index.ts(1239,37): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/index.ts(1648,60): error TS2339: Property 'events' does not exist on type 'Session'.
+src/index.ts(1758,47): error TS2339: Property 'events' does not exist on type 'Session'.
+
