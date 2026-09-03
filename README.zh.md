@@ -36,7 +36,7 @@ TUI 呈现完整会话：对话记录、工具卡片、推理块与模型切换�
 # from this repository
 pnpm pack --pack-destination /tmp
 # create a profile, install the tarball as a plugin
-dsh plugin --profile tui add /tmp/dsh-tui-0.1.4.tgz
+dsh plugin --profile tui add /tmp/dsh-tui-0.1.7.tgz
 # boot into the interactive TUI
 dsh --profile tui
 ```
@@ -48,7 +48,7 @@ bundle patch 还会在 `@deepseek-ai/dsh-base` 之上配置一个 `main` 智能�
 ```bash
 npm install dsh-tui
 # or from a tarball
-npm install dsh-tui-0.1.4.tgz
+npm install dsh-tui-0.1.7.tgz
 ```
 
 随后在 dsh profile patch 中引用：
@@ -166,5 +166,6 @@ cwd 位于本仓库内的 dsh 会话会自动发现它们（项目 `agents/skill
 ## 许可证
 
 BSD-3-Clause —— 见 [LICENSE](LICENSE)。原始源码派生自公开的 DeepSeek Harness 提交历史；本仓库为独立再打包，不具任何官方身份。
+
 
 

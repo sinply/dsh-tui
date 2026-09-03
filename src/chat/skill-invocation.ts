@@ -4,15 +4,11 @@
  * @module dsh-tui/chat/skill-invocation
  */
 
+import { assertNever } from '@deepseek-ai/dsh-util-values'
 import type { SkillDefinition, SkillResourceBase } from '@deepseek-ai/dsh-skill'
 
 /** Prefix that marks an editor submission as a manual skill invocation. */
 export const SKILL_COMMAND_PREFIX = '/skill:'
-
-/** Exhaustiveness guard for a discriminated union (local; `dsh-llm` no longer exports one). */
-function assertNever(value: never, label: string): never {
-  throw new Error(`unexpected ${label}: ${String(value)}`)
-}
 
 /** Parsed `/skill:<name> [instructions]` submission; `name` is empty when the prefix carries no name. */
 export interface ParsedSkillCommand {

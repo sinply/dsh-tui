@@ -36,7 +36,7 @@ The package ships a built `lib/` and a `cordis.patch.yml` bundle overlay.
 # from this repository
 pnpm pack --pack-destination /tmp
 # create a profile, install the tarball as a plugin
-dsh plugin --profile tui add /tmp/dsh-tui-0.1.4.tgz
+dsh plugin --profile tui add /tmp/dsh-tui-0.1.7.tgz
 # boot into the interactive TUI
 dsh --profile tui
 ```
@@ -48,7 +48,7 @@ The bundle patch also configures a `main` agent (`sessionId: main`, `provider: d
 ```bash
 npm install dsh-tui
 # or from a tarball
-npm install dsh-tui-0.1.4.tgz
+npm install dsh-tui-0.1.7.tgz
 ```
 
 Then reference it in a dsh profile patch:
@@ -166,5 +166,6 @@ The upstream `packages/ui/tui` predates several DeepSeek Harness API changes; th
 ## License
 
 BSD-3-Clause — see [LICENSE](LICENSE). The original source is derived from the public DeepSeek Harness commit history; this repository is an independent re-packaging and carries no official status.
+
 
 

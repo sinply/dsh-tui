@@ -1,6 +1,6 @@
 {
   "name": "dsh-tui",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Interactive TUI terminal front door for DeepSeek Harness agents — an independently maintained package derived from official DeepSeek Harness history",
   "type": "module",
   "main": "lib/index.js",
@@ -82,9 +82,6 @@
       "optional": true
     },
     "@deepseek-ai/dsh-tool-todo": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-util-values": {
       "optional": true
     }
   },

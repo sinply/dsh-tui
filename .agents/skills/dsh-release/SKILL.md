@@ -57,7 +57,7 @@ Pre-release channels break APIs freely (harness AGENTS.md: no compatibility prom
 - **session event access** (alpha.4): `Session.events` is gone — call `session.snapshotEvents()`. Surface messages no longer share a `.data.message` envelope: `user/message` is a `UserMessage`, `assistant/message`/`tool/result` carry `message` directly — read them through `deriveEventMessage(event)`.
 - **session exports**: `JsonValue`/`TodoItem` left `@deepseek-ai/dsh-session`; import `JsonValue` from `@deepseek-ai/dsh-util-values` and `TodoItem` from `@deepseek-ai/dsh-tool-todo` (the latter also carries the `todo/write` SessionEventMap augmentation, so the `todo/write` switch case typechecks again).
 - **projection cache**: `coldSnapshot` and `cachedSnapshot` identities need the durable fork-lineage cut (`SessionLogOffset`) a listed record does not carry — leave persisted cold reads to the query engine: live titles from the projections snapshot, persisted titles from one `readTitleSnapshots` batch.
-- **exhaustiveness guards**: `assertNever` was removed from `@deepseek-ai/dsh-llm`; keep a local two-argument helper.
+- **exhaustiveness guards**: `assertNever` left `@deepseek-ai/dsh-llm` for `@deepseek-ai/dsh-util-values` (runtime import — make that package a non-optional peer when used, mirroring the harness's own imports).
 - **new peers**: any module the migration imports becomes a peer — add `@deepseek-ai/dsh-*` to `peerDependencies` (+ `peerDependenciesMeta.optional`, and a workspace override).
 
 Read the replacement contract at its source before editing: `git -C <harness-clone> show origin/master:packages/<group>/<pkg>/src/index.ts` is the fastest way to see the new shape.
